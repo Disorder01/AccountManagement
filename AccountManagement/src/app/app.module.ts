@@ -8,6 +8,8 @@ import { OverviewComponent } from './overview/overview.component';
 import { AdministrationComponent } from './administration/administration.component';
 import { CreateAccountComponent } from './create-account/create-account.component';
 import { UserInfoComponent } from './user-info/user-info.component';
+import { LoginComponent } from './authentication/login/login.component';
+import { RegistrationComponent } from './authentication/registration/registration.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { UserInfoComponent } from './user-info/user-info.component';
     OverviewComponent,
     AdministrationComponent,
     CreateAccountComponent,
-    UserInfoComponent
+    UserInfoComponent,
+    LoginComponent,
+    RegistrationComponent
   ],
   imports: [
     BrowserModule,
