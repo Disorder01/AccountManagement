@@ -1,3 +1,5 @@
+@import '../../../assets/colors.scss';
+
 .overAll {
   display: flex;
   align-items: center;
@@ -10,3 +12,21 @@
     display: flex;
     flex-direction: column;
 }  
+
+input {
+  height: 2vw;
+}
+
+button {
+  margin-top: 25px;
+  height: 50px;
+  border-radius: 15px; 
+  cursor: pointer;
+  &:hover {
+  background-color: $green;
+  }
+} 
+
+h2 {
+  text-align: center;
+}
