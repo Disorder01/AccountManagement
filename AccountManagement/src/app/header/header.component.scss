@@ -23,7 +23,13 @@
 }
 
 .nav-list a:hover {
-    background-color: #ececec;
+    background-color: $secondary-color;
     color: black;
+}
+
+.active {
+    background-color: $secondary-color;
+    color: black !important;
+    text-decoration: underline !important;
 }
 
