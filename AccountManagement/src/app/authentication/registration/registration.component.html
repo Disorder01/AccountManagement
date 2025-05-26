@@ -1,12 +1,14 @@
 <div class="overAll">
     <div class="registration">
-        <h2>Username: </h2>
-        <input type="text">
+        <h2>Nachname: </h2>
+        <input type="text" [(ngModel)]="user.lastName">
+        <h2>Vorname: </h2>
+        <input type="text" [(ngModel)]="user.firstName">
         <h2>Passwort:</h2>
-        <input type="password">
+        <input type="password" [(ngModel)]="user.password">
         <h2>Passwort bestätigen:</h2>
-        <input type="password">
-        <button>Profil erstellen!</button>
+        <input type="password" [(ngModel)]="confirmPassword">
+        <button (click)="createUser()">Profil erstellen!</button>
 
         <h3>Sie haben schon ein Profil?</h3>
         <a href="/login">Jetzt anmelden</a>
