@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
 
-const User = require('models/User');
+const User = require('../Backend/models/user');
 
 const app = express();
 const PORT = 3000;
@@ -18,7 +18,11 @@ app.post('/api/register', (req, res) => {
 
   const filePath = path.join(__dirname, 'database', 'users.csv');
 
-  const csvLine = `${user.id || ''},${user.firstName || ''},${user.lastName || ''},${user.password || ''}\n`;
+  const csvLine =
+  `${user.id || ''}\n` +
+  `${user.firstName || ''}\n` +
+  `${user.lastName || ''}\n` +
+  `${user.password || ''}\n\n`;
   const header = 'id,firstName,lastName,password\n';
 
   if (!fs.existsSync(filePath)) {
