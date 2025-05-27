@@ -4,14 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
 
-class User {
-  constructor({ id, firstName, lastName, password }) {
-    this.id = id;
-    this.firstName = firstName;
-    this.lastName = lastName;
-    this.password = password;
-  }
-}
+const User = require('models/User');
 
 const app = express();
 const PORT = 3000;
@@ -23,7 +16,7 @@ app.post('/api/register', (req, res) => {
   const userData = req.body;
   const user = new User(userData);
 
-  const filePath = path.join(__dirname, 'registrations.csv');
+  const filePath = path.join(__dirname, 'database', 'users.csv');
 
   const csvLine = `${user.id || ''},${user.firstName || ''},${user.lastName || ''},${user.password || ''}\n`;
   const header = 'id,firstName,lastName,password\n';
