@@ -4,21 +4,29 @@ const fs = require('fs');
 const path = require('path');
 const bodyParser = require('body-parser');
 
+class User {
+  constructor({ id, firstName, lastName, password }) {
+    this.id = id;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.password = password;
+  }
+}
+
 const app = express();
 const PORT = 3000;
 
-// CORS aktivieren
 app.use(cors());
-
-// JSON Body Parsing Middleware
 app.use(bodyParser.json());
 
 app.post('/api/register', (req, res) => {
-  const user = req.body;
+  const userData = req.body;
+  const user = new User(userData);
+
   const filePath = path.join(__dirname, 'registrations.csv');
 
-  const csvLine = `${user.firstname},${user.lastname},${user.email}\n`;
-  const header = 'firstname,lastname,email\n';
+  const csvLine = `${user.id || ''},${user.firstName || ''},${user.lastName || ''},${user.password || ''}\n`;
+  const header = 'id,firstName,lastName,password\n';
 
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(filePath, header);

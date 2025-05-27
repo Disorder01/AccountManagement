@@ -16,10 +16,10 @@ export class ApiService {
     constructor(private http: HttpClient) {}
     
     registerNewUser(user: User) {
-        this.http.post('http://localhost:3000/api/register', this.user)
-        .subscribe({
-            next: () => alert('Daten wurden gespeichert'),
-            error: () => alert('Fehler beim Speichern'),
-      });
-    }
+    this.http.post('http://localhost:3000/api/register', user) // <-- korrekt
+    .subscribe({
+        next: () => alert('Daten wurden gespeichert'),
+        error: () => alert('Fehler beim Speichern'),
+    });
+}
 }
