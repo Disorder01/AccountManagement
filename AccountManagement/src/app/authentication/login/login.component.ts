@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ApiService } from '../../apiService';
 
 @Component({
   selector: 'app-login',
@@ -6,10 +7,12 @@ import { Component } from '@angular/core';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-  username: string = '';
+  lastname: string = '';
   password: string = '';  
 
-login() {
+  constructor(private apiService: ApiService) {}
   
-}
+  login() {
+    this.apiService.login(this.lastname, this.password);
+  }
 }
