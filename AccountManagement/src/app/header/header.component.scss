@@ -33,3 +33,15 @@
     text-decoration: underline !important;
 }
 
+button {
+    position: absolute;
+    right: 0;
+    margin-right: 35px;
+    height: 40px;
+    width: 100px;
+    &:hover {
+        background-color: black;
+        color: white;
+    }
+}
+
