@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { User } from "./models/user";
+import { User } from "../models/user";
 import { Router } from "@angular/router";
-import { AuthService } from "./AuthService";
+import { AuthService } from "../AuthService";
 
 @Injectable({
     providedIn: 'root'
@@ -18,12 +18,9 @@ export class ApiService {
     constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
     
     registerNewUser(user: User) {
-        this.http.post('http://localhost:3000/api/register', user) 
-            .subscribe({
-                next: () => alert('Daten wurden gespeichert'),
-                error: () => alert('Fehler beim Speichern'),
-            });
-    }
+  return this.http.post('http://localhost:3000/api/register', user);
+}
+
     
     login(lastName: string, password: string) {
        this.http.post<{ success: boolean }>('http://localhost:3000/api/login', { lastName, password })
@@ -38,7 +35,7 @@ export class ApiService {
             }
         },
         error: () => {
-            alert('Fehler beim Login');
+            alert('Fehler beim Login: Nachname oder Passwort falsch!');
         }
         }); 
     }

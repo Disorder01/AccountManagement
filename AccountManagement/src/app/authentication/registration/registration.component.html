@@ -1,16 +1,24 @@
 <div class="overAll">
-    <div class="registration">
-        <h2>Nachname: </h2>
-        <input type="text" [(ngModel)]="user.lastName">
-        <h2>Vorname: </h2>
-        <input type="text" [(ngModel)]="user.firstName">
-        <h2>Passwort:</h2>
-        <input type="password" [(ngModel)]="user.password">
-        <h2>Passwort bestätigen:</h2>
-        <input type="password" [(ngModel)]="confirmPassword">
-        <button (click)="createUser()">Profil erstellen!</button>
+  <div class="registration">
+    <h2>Nachname: </h2>
+    <input type="text" [(ngModel)]="user.lastName">
+    <div class="error" *ngIf="validationErrors.lastName">{{ validationErrors.lastName }}</div>
 
-        <h3>Sie haben schon ein Profil?</h3>
-        <a href="/login">Jetzt anmelden</a>
-    </div>
+    <h2>Vorname: </h2>
+    <input type="text" [(ngModel)]="user.firstName">
+    <div class="error" *ngIf="validationErrors.firstName">{{ validationErrors.firstName }}</div>
+
+    <h2>Passwort:</h2>
+    <input type="password" [(ngModel)]="user.password">
+    <div class="error" *ngIf="validationErrors.password">{{ validationErrors.password }}</div>
+
+    <h2>Passwort bestätigen:</h2>
+    <input type="password" [(ngModel)]="confirmPassword">
+    <div class="error" *ngIf="validationErrors.confirmPassword">{{ validationErrors.confirmPassword }}</div>
+
+    <button (click)="createUser()">Profil erstellen!</button>
+
+    <h3>Sie haben schon ein Profil?</h3>
+    <a href="/login">Jetzt anmelden</a>
+  </div>
 </div>

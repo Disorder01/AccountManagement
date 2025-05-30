@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ApiService } from '../../apiService';
+import { ApiService } from '../../services/apiService';
 
 @Component({
   selector: 'app-login',
