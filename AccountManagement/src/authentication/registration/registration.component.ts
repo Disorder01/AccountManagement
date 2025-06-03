@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { User } from '../../models/user';
+import { User } from '../../app/models/user';
 import { ApiService } from '../../services/apiService';
 import { ValidationService } from '../../services/validationService';
 

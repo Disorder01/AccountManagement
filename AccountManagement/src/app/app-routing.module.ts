@@ -4,9 +4,9 @@ import { OverviewComponent } from './overview/overview.component';
 import { AdministrationComponent } from './administration/administration.component';
 import { CreateAccountComponent } from './create-account/create-account.component';
 import { UserInfoComponent } from './user-info/user-info.component';
-import { LoginComponent } from './authentication/login/login.component';
+import { LoginComponent } from '../authentication/login/login.component';
 import { AuthGuard } from './auth.guard';
-import { RegistrationComponent } from './authentication/registration/registration.component';
+import { RegistrationComponent } from '../authentication/registration/registration.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },

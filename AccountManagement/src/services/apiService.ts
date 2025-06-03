@@ -1,8 +1,8 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { User } from "../models/user";
+import { User } from "../app/models/user";
 import { Router } from "@angular/router";
-import { AuthService } from "../AuthService";
+import { AuthService } from "../app/AuthService";
 
 @Injectable({
     providedIn: 'root'
