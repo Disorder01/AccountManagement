@@ -1,0 +1,17 @@
+@import '../../assets/colors.scss';
+
+.new-account {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    text-align: center;
+    flex-direction: column;
+    color: $font-color;
+}
+
+.type-dropdown {
+    height: 30px;
+    width: 100px;
+}

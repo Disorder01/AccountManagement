@@ -1,1 +1,8 @@
-<p>create-account works!</p>
+<div class="new-account">
+    <h1>Neues Konto anlegen</h1>
+    <select class="type-dropdown" id="accountType" [(ngModel)]="selectedType">
+        <option *ngFor="let type of accountTypeValues" [value]="type">
+            {{ accountTypeLabels[type] }}
+        </option>
+    </select>
+</div>
