@@ -1,23 +1,26 @@
 import { AccountType } from "../enums/accountType";
 
 export interface Account {
-    accountNumber: number;
-    customerId: number;
-    accountType: AccountType;
-    accountBalance: number;
+  accountNumber: number;
+  customerId: number;
+  accountType: AccountType;
+  accountBalance: number;
 }
 
 export interface GiroAccount extends Account {
-    accountType: AccountType.Giro;
-    overdraftLimit: number;
+  accountType: AccountType.Giro;
+  overdraftLimit: number;
+  pin: string;              
 }
 
 export interface SparAccount extends Account {
-    accountType: AccountType.Spar;
-    interestRate: number;
+  accountType: AccountType.Spar;
+  interestRate: number;
+  monthlyDeposit: number;    
+  goal: number;            
 }
 
 export interface TagesgeldAccount extends Account {
   accountType: AccountType.Tagesgeld;
-  interestRate: number;
+  dailyPayout: number;
 }

@@ -1,8 +1,140 @@
 <div class="new-account">
-    <h1>Neues Konto anlegen</h1>
-    <select class="type-dropdown" id="accountType" [(ngModel)]="selectedType">
-        <option *ngFor="let type of accountTypeValues" [value]="type">
-            {{ accountTypeLabels[type] }}
-        </option>
-    </select>
+  <h1>Neues Konto anlegen</h1>
+
+  <select
+    class="type-dropdown"
+    id="accountType"
+    [(ngModel)]="selectedType"
+    name="accountType"
+  >
+    <option [ngValue]="null" disabled selected>-- Kontoart wählen --</option>
+    <option *ngFor="let type of accountTypeValues" [ngValue]="type">
+      {{ accountTypeLabels[type] }}
+    </option>
+  </select>
+
+  <form
+    *ngIf="selectedType !== null"
+    (ngSubmit)="createAccount()"
+    style="margin-top: 2rem; width: 100%; max-width: 400px;"
+  >
+    <div style="margin-bottom: 1rem; text-align: left;">
+      <h2>Kunden ID: {{ userId }}</h2>
+    </div>
+
+    <div style="margin-bottom: 1rem; text-align: left;">
+      <label for="accountBalance">Startguthaben (€):</label>
+      <input
+        id="accountBalance"
+        type="number"
+        [(ngModel)]="accountBalance"
+        name="accountBalance"
+        required
+        class="form-control"
+        step="0.01"
+      />
+    </div>
+
+    <div *ngIf="selectedType === accountTypes.Giro" style="text-align: left;">
+      <h2>Girokonto Daten</h2>
+
+      <div style="margin-bottom: 1rem;">
+        <label for="overdraftLimit">Dispo Limit (€):</label>
+        <input
+          id="overdraftLimit"
+          type="number"
+          [(ngModel)]="overdraftLimit"
+          name="overdraftLimit"
+          required
+          class="form-control"
+          step="0.01"
+        />
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+        <label for="pin">PIN (4-stellig):</label>
+        <input
+          id="pin"
+          type="text"
+          maxlength="4"
+          minlength="4"
+          pattern="\\d{4}"
+          [(ngModel)]="pin"
+          name="pin"
+          required
+          class="form-control"
+          placeholder="z. B. 1234"
+        />
+        <div
+          class="error"
+          *ngIf="pin && !isValidPin(pin)"
+          style="color: #b33; margin-top: 0.25rem;"
+        >
+          Der PIN muss genau 4 Ziffern enthalten.
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="selectedType === accountTypes.Spar" style="text-align: left;">
+      <h2>Sparkonto Daten</h2>
+
+      <div style="margin-bottom: 1rem;">
+        <h2>Zinssatz: 2,5 % p. a.</h2>
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+        <label for="monthlyDeposit">Monatlicher Sparbetrag (€):</label>
+        <input
+          id="monthlyDeposit"
+          type="number"
+          [(ngModel)]="monthlyDeposit"
+          name="monthlyDeposit"
+          required
+          class="form-control"
+          step="0.01"
+          min="0"
+        />
+      </div>
+
+      <div style="margin-bottom: 1rem;">
+        <label for="goal">Sparziel (€):</label>
+        <input
+          id="goal"
+          type="number"
+          [(ngModel)]="goal"
+          name="goal"
+          required
+          class="form-control"
+          step="0.01"
+          min="0"
+        />
+      </div>
+    </div>
+
+    <div *ngIf="selectedType === accountTypes.Tagesgeld" style="text-align: left;">
+      <h2>Tagesgeldkonto-Daten</h2>
+      <div style="margin-bottom: 1rem;">
+        <label for="dailyPayout">Tägliche Auszahlung (€):</label>
+        <input
+          id="dailyPayout"
+          type="number"
+          [(ngModel)]="dailyPayout"
+          name="dailyPayout"
+          required
+          class="form-control"
+          step="0.01"
+          min="0"
+        />
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="!isFormValid()"
+      style="margin-top: 1rem; width: 100%;"
+    >
+      Konto anlegen
+    </button>
+  </form>
 </div>

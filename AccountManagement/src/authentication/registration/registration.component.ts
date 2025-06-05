@@ -14,7 +14,8 @@ export class RegistrationComponent {
     id: 0,
     firstName: '',
     lastName: '',
-    password: ''
+    password: '',
+    accounts: []
   };
 
   confirmPassword: string = '';

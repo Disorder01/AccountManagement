@@ -12,7 +12,8 @@ export class ApiService {
         id: 0,
         firstName: '',
         lastName: '',
-        password: ''
+        password: '',
+        accounts: []
     }
     
     constructor(private http: HttpClient, private router: Router, private authService: AuthService) {}
