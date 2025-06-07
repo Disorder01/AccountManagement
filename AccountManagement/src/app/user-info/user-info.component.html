@@ -1,1 +1,8 @@
-<p>user-info works!</p>
+<div *ngIf="user">
+  <h3>Benutzerinformationen</h3>
+  <ul>
+    <li><strong>ID:</strong> {{ user.id }}</li>
+    <li><strong>Vorname:</strong> {{ user.firstName }}</li>
+    <li><strong>Nachname:</strong> {{ user.lastName }}</li>
+  </ul>
+</div>

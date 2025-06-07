@@ -45,17 +45,23 @@ app.post('/api/login', (req, res) => {
     .split('\n')
     .filter(line => line.trim() !== '');
 
-  // Zeile 0 = Header
   for (let i = 1; i < lines.length; i++) {
-    const [id, firstName, currentLastName, currentPassword] = lines[i].split(',');
-
+    const [idStr, firstName, currentLastName, currentPassword] = lines[i].split(',');
     if (currentLastName === lastName && currentPassword === password) {
-      return res.json({ success: true });
+      const user = new User({
+        id: parseInt(idStr, 10),
+        firstName,
+        lastName: currentLastName,
+        password: currentPassword,
+        accounts: [] 
+      });
+      return res.json({ success: true, user });
     }
   }
 
   res.json({ success: false });
 });
+
 
 app.listen(PORT, () => {
   console.log(`Server läuft auf http://localhost:${PORT}`);
@@ -70,7 +76,6 @@ function getNextId(filePath) {
 
   let maxId = 0;
 
-  // Überspringe Header-Zeile
   for (let i = 1; i < lines.length; i++) {
     const id = parseInt(lines[i].split(',')[0]);
     if (!isNaN(id) && id > maxId) {

@@ -1,27 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
+import { User } from "../models/user";
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  private isLoggedIn = false;  // change
-  private _currentUserId: number | null = null;
+  private _user: User | null = null;
 
-  login() {
-    this.isLoggedIn = true;
-  }
+  login(user: User) { this._user = user; }
+  logout()   { this._user = null; }
 
-  logout() {
-    this.isLoggedIn = false;
-  }
+  get isLoggedIn(): boolean { return this._user !== null; }
+  isAuthenticated(): boolean { return this.isLoggedIn; }
 
-  isAuthenticated(): boolean {
-    return this.isLoggedIn;
-  }
-
-  setCurrentUserId(id: number) {
-    this._currentUserId = id;
-  }
-
-  get currentUserId(): number | null {
-    return this._currentUserId;
-  }
+  get currentUserId(): number | null { return this._user?.id ?? null; }
+  get currentUser(): User | null    { return this._user; }
 }

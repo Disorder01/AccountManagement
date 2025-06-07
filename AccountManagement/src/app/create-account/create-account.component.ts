@@ -47,7 +47,6 @@ export class CreateAccountComponent implements OnInit {
     const id = this.authService.currentUserId;
     if (id === null) {
       console.error('Kein User eingeloggt – CreateAccountComponent ohne userId');
-      // Optional: Umleitung ins Login, falls gewünscht
       // this.router.navigate(['/login']);
     } else {
       this.userId = id;
