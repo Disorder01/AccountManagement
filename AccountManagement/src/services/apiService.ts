@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { User } from "../models/user";
 import { Router } from "@angular/router";
 import { AuthService } from "../app/AuthService";
+import { Account } from "../models/account";
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -39,5 +40,12 @@ export class ApiService {
           alert('Fehler beim Login: Nachname oder Passwort falsch!');
         }
       });
+  }
+
+    createAccount(account: Account) {
+    return this.http.post<{ success: boolean; account?: Account }>(
+      'http://localhost:3000/api/accounts',
+      account
+    );
   }
 }

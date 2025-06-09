@@ -7,6 +7,7 @@ import {
   Account,
 } from '../../models/account';
 import { AuthService } from '../../app/AuthService';
+import { ApiService } from '../../services/apiService';
 
 @Component({
   selector: 'app-create-account',
@@ -29,25 +30,23 @@ export class CreateAccountComponent implements OnInit {
 
   selectedType: AccountType | null = null;
   userId!: number;
-
   accountBalance!: number;
-
   overdraftLimit!: number;
   pin: string = '';
-
-  readonly FIXED_INTEREST_RATE = 2.5; // 2,5 % p. a.
+  readonly FIXED_INTEREST_RATE = 2.5;
   monthlyDeposit!: number;
   goal!: number;
-
   dailyPayout!: number;
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private apiService: ApiService
+  ) {}
 
   ngOnInit(): void {
     const id = this.authService.currentUserId;
     if (id === null) {
       console.error('Kein User eingeloggt – CreateAccountComponent ohne userId');
-      // this.router.navigate(['/login']);
     } else {
       this.userId = id;
     }
@@ -69,7 +68,6 @@ export class CreateAccountComponent implements OnInit {
           this.pin != null &&
           this.isValidPin(this.pin)
         );
-
       case AccountType.Spar:
         return (
           this.monthlyDeposit != null &&
@@ -77,10 +75,8 @@ export class CreateAccountComponent implements OnInit {
           this.goal != null &&
           this.goal >= 0
         );
-
       case AccountType.Tagesgeld:
         return this.dailyPayout != null && this.dailyPayout >= 0;
-
       default:
         return false;
     }
@@ -111,21 +107,19 @@ export class CreateAccountComponent implements OnInit {
         newAccount = giro;
         break;
       }
-
       case AccountType.Spar: {
         const spar: SparAccount = {
           accountNumber: newAccountNumber,
           customerId: this.userId,
           accountType: AccountType.Spar,
           accountBalance: this.accountBalance,
-          interestRate: this.FIXED_INTEREST_RATE, // fest 2,5 %
+          interestRate: this.FIXED_INTEREST_RATE,
           monthlyDeposit: this.monthlyDeposit,
           goal: this.goal,
         } as SparAccount;
         newAccount = spar;
         break;
       }
-
       case AccountType.Tagesgeld: {
         const tagesgeld: TagesgeldAccount = {
           accountNumber: newAccountNumber,
@@ -137,18 +131,22 @@ export class CreateAccountComponent implements OnInit {
         newAccount = tagesgeld;
         break;
       }
-
       default:
         return;
     }
 
-    console.log('Neues Konto angelegt:', newAccount);
-    this.resetForm();
+    this.apiService.createAccount(newAccount).subscribe({
+      next: () => {
+        alert('Konto erfolgreich angelegt!');
+        this.resetForm();
+      },
+      error: (err) => {
+        console.error('Fehler beim Anlegen des Kontos', err);
+        alert('Fehler beim Anlegen des Kontos. Bitte erneut versuchen.');
+      }
+    });
   }
 
-  // ====================
-  // 5) Formular zurücksetzen
-  // ====================
   private resetForm(): void {
     this.selectedType = null;
     this.accountBalance = NaN;
