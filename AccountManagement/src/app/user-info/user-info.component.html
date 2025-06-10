@@ -6,3 +6,39 @@
     <li><strong>Nachname:</strong> {{ user.lastName }}</li>
   </ul>
 </div>
+
+<!-- src/app/user-info/user-info.component.html -->
+<div class="account-table-container">
+  <h2>Meine Konten</h2>
+  <table class="account-table">
+    <thead>
+      <tr>
+        <th>Kontonr.</th>
+        <th>Typ</th>
+        <th>Konostand</th>
+        <th>Dispo</th>
+        <th>Zinssatz</th>
+        <th>Monatl. Rate</th>
+        <th>Ziel</th>
+        <th>Tägliche Auszahlung</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let a of accounts">
+        <td>{{ a.accountNumber }}</td>
+        <td>{{ a.accountType }}</td>
+        <td>{{ a.accountBalance | number:'1.2-2' }} €</td>
+        <td>{{ a.overdraftLimit ?? '-' }}</td>
+        <td>{{ a.interestRate ?? '-' }}</td>
+        <td>{{ a.monthlyDeposit ?? '-' }}</td>
+        <td>{{ a.goal ?? '-' }}</td>
+        <td>{{ a.dailyPayout ?? '-' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p-button></p-button>
+
+<button pbutton></button>
+

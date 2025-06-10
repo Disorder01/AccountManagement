@@ -48,4 +48,10 @@ export class ApiService {
       account
     );
   }
+
+  getUserAccounts(customerId: number) {
+    return this.http.get<{ success: boolean; accounts: Account[] }>(
+      `http://localhost:3000/api/accounts/${customerId}`
+    );
+  }
 }

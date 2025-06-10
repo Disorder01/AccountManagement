@@ -5,6 +5,13 @@ export interface Account {
   customerId: number;
   accountType: AccountType;
   accountBalance: number;
+  
+  overdraftLimit?: number;
+  pin?: string;
+  interestRate?: number;
+  monthlyDeposit?: number;
+  goal?: number;
+  dailyPayout?: number;
 }
 
 export interface GiroAccount extends Account {

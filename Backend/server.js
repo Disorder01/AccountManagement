@@ -109,3 +109,41 @@ app.post('/api/accounts', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server läuft auf http://localhost:${PORT}`);
 });
+
+app.get('/api/accounts/:customerId', (req, res) => {
+  const filePath = path.join(__dirname, 'database', 'accounts.csv');
+  const customerId = parseInt(req.params.customerId, 10);
+
+  if (!fs.existsSync(filePath)) {
+    return res.json({ success: true, accounts: [] });
+  }
+
+  const lines = fs.readFileSync(filePath, 'utf-8')
+    .split('\n')
+    .filter(l => l.trim());
+
+  // Spalten-Header überspringen und Zeilen parsen
+  const accounts = lines.slice(1)
+    .map(line => {
+      const [
+        accountNumber, custId, accountType, accountBalance,
+        overdraftLimit, pin, interestRate, monthlyDeposit,
+        goal, dailyPayout
+      ] = line.split(',');
+      return {
+        accountNumber: +accountNumber,
+        customerId: +custId,
+        accountType,
+        accountBalance: +accountBalance,
+        overdraftLimit: overdraftLimit ? +overdraftLimit : undefined,
+        pin: pin || undefined,
+        interestRate: interestRate ? +interestRate : undefined,
+        monthlyDeposit: monthlyDeposit ? +monthlyDeposit : undefined,
+        goal: goal ? +goal : undefined,
+        dailyPayout: dailyPayout ? +dailyPayout : undefined
+      };
+    })
+    .filter(acc => acc.customerId === customerId);
+
+  res.json({ success: true, accounts });
+});
