@@ -1,1 +1,22 @@
-<p>administration works!</p>
+<div class="administration-container">
+  <div class="table-wrapper">
+    <table class="accounts-table">
+      <thead>
+        <tr>
+          <th *ngFor="let col of columns">{{ col }}</th>
+          <th>Aktionen</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let account of accounts">
+          <td *ngFor="let col of columns">{{ account[col] }}</td>
+          <td class="actions">
+            <button class="btn" (click)="deposit(account)">Einzahlen</button>
+            <button class="btn" (click)="withdraw(account)">Auszahlen</button>
+            <button class="btn" (click)="edit(account)">Konto bearbeiten</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
