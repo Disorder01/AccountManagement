@@ -1,18 +1,102 @@
-// src/app/user-info/user-info.component.scss
-.account-table-container {
-  overflow-x: auto;
-  margin-top: 1rem;
+:host {
+  display: block;
+  color: #fff;
+  background: #000;
 }
 
-.account-table {
-  width: 100%;
-  border-collapse: collapse;
-  th, td {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    text-align: left;
+.user-info-card {
+  background: #000;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+
+  h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #fff;
   }
-  th {
-    background: #f5f5f5;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      margin-bottom: 0.5rem;
+
+      strong {
+        width: 100px;
+        display: inline-block;
+      }
+
+      color: #fff;
+    }
+  }
+}
+
+.account-table-container {
+  background: #000;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 2rem;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 12px rgba(255,255,255,0.1);
+  overflow-x: auto;
+
+  h2 {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #fff;
+  }
+
+  .account-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+
+    th, td {
+      padding: 0.75rem;
+      text-align: left;
+      color: #fff;
+    }
+
+    th {
+      border-bottom: 2px solid #fff;
+      text-transform: uppercase;
+      font-weight: 600;
+      background: #111;
+    }
+
+    tr {
+      border-bottom: 1px solid #333;
+      background: #000;
+      &:nth-child(even) {
+        background: #111;
+      }
+
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: #222;
+      }
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .account-table-container {
+    .account-table {
+      font-size: 1rem;
+    }
   }
 }
