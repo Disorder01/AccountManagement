@@ -11,6 +11,8 @@ import { ApiService } from '../../services/apiService';
 })
 export class UserInfoComponent implements OnInit {
   user: User | null = null;
+  private originalUser: User | null = null;
+  editMode = false;
   userId!: number;
   accounts: Account[] = [];
 
@@ -18,11 +20,42 @@ export class UserInfoComponent implements OnInit {
 
   ngOnInit(): void {
     this.user = this.authService.currentUser;
+    this.originalUser = this.user ? { ...this.user } : null;
     const id = this.authService.currentUserId;
     if (id !== null) {
       this.userId = id;
       this.loadAccounts();
     }
+  }
+
+    toggleEdit(): void {
+    this.editMode = !this.editMode;
+    if (!this.editMode && this.originalUser) {
+      // beim Abbruch zurücksetzen
+      this.user = { ...this.originalUser };
+    }
+  }
+
+    saveUser(): void {
+    if (!this.user) { return; }
+    this.apiService.updateUser(this.user).subscribe({
+      next: res => {
+        if (res.success) {
+          // neuen Stand ins original übernehmen
+          this.originalUser = { ...this.user! };
+          this.editMode = false;
+        } else {
+          console.error('Speichern fehlgeschlagen', res);
+        }
+      },
+      error: err => console.error('Speichern fehlgeschlagen', err)
+    });
+
+    this.editMode = false;
+  }
+
+  cancelEdit(): void {
+    this.toggleEdit();  // setzt automatisch zurück
   }
 
   private loadAccounts(): void {

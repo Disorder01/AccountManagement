@@ -39,6 +39,23 @@
   }
 }
 
+a {
+  color: green;
+  &:hover {
+    color: darkgreen;
+  }
+}
+
+.edit-actions button  {
+  margin: 2px;
+  padding: 2px; 
+  border-radius: 15px;
+  &:hover {
+    background-color: darkgray;
+    color: white;
+  }
+}
+
 .account-table-container {
   background: #000;
   border: 1px solid #fff;

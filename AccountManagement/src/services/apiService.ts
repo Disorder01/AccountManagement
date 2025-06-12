@@ -1,9 +1,9 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { User } from "../models/user";
-import { Router } from "@angular/router";
-import { AuthService } from "../app/AuthService";
-import { Account } from "../models/account";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { User } from '../models/user';
+import { Router } from '@angular/router';
+import { AuthService } from '../app/AuthService';
+import { Account } from '../models/account';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -38,11 +38,11 @@ export class ApiService {
         },
         error: () => {
           alert('Fehler beim Login: Nachname oder Passwort falsch!');
-        }
+        },
       });
   }
 
-    createAccount(account: Account) {
+  createAccount(account: Account) {
     return this.http.post<{ success: boolean; account?: Account }>(
       'http://localhost:3000/api/accounts',
       account
@@ -52,6 +52,13 @@ export class ApiService {
   getUserAccounts(customerId: number) {
     return this.http.get<{ success: boolean; accounts: Account[] }>(
       `http://localhost:3000/api/accounts/${customerId}`
+    );
+  }
+
+  updateUser(user: User) {
+    return this.http.put<{ success: boolean; user?: User }>(
+      `http://localhost:3000/api/users/${user.id}`,
+      user
     );
   }
 }

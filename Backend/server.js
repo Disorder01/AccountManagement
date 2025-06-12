@@ -152,13 +152,12 @@ app.get('/api/accounts/:customerId', (req, res) => {
 app.post('/api/accounts/:accountNumber/transaction', (req, res) => {
   const filePath = path.join(__dirname, 'database', 'accounts.csv');
   const acctNum = parseInt(req.params.accountNumber, 10);
-  const { amount, type } = req.body; // amount: Zahl, type: 'deposit' | 'withdraw'
+  const { amount, type } = req.body; 
 
   if (!fs.existsSync(filePath)) {
     return res.status(404).json({ success: false, message: 'Accounts CSV nicht gefunden' });
   }
 
-  // CSV einlesen
   const lines = fs.readFileSync(filePath, 'utf-8')
     .split('\n')
     .filter(l => l.trim());
@@ -185,4 +184,45 @@ app.post('/api/accounts/:accountNumber/transaction', (req, res) => {
   } else {
     res.status(404).json({ success: false, message: 'Konto nicht gefunden' });
   }
+});
+
+
+app.put('/api/users/:id', (req, res) => {
+  const filePath = path.join(__dirname, 'database', 'users.csv');
+  const userId = req.params.id;
+  const { firstName: newFirstName, lastName: newLastName } = req.body;
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ success: false, message: 'Users CSV nicht gefunden' });
+  }
+
+  const lines = fs.readFileSync(filePath, 'utf-8')
+    .split('\n')
+    .filter(line => line.trim());
+  const header = lines[0];
+  let updatedUser = null;
+
+  const newLines = lines.slice(1).map(line => {
+    const [idStr, oldFirst, oldLast, password] = line.split(',');
+    if (idStr === userId) {
+      // Zeile mit neuen Namen überschreiben, Passwort beibehalten
+      updatedUser = new User({
+        id: parseInt(idStr, 10),
+        firstName: newFirstName,
+        lastName: newLastName,
+        password
+      });
+      return [idStr, newFirstName, newLastName, password].join(',');
+    }
+    return line;
+  });
+
+  if (!updatedUser) {
+    return res.status(404).json({ success: false, message: 'User nicht gefunden' });
+  }
+
+  // CSV neu schreiben
+  fs.writeFileSync(filePath, [header, ...newLines].join('\n') + '\n', 'utf-8');
+
+  res.json({ success: true, user: updatedUser });
 });
