@@ -147,3 +147,42 @@ app.get('/api/accounts/:customerId', (req, res) => {
 
   res.json({ success: true, accounts });
 });
+
+
+app.post('/api/accounts/:accountNumber/transaction', (req, res) => {
+  const filePath = path.join(__dirname, 'database', 'accounts.csv');
+  const acctNum = parseInt(req.params.accountNumber, 10);
+  const { amount, type } = req.body; // amount: Zahl, type: 'deposit' | 'withdraw'
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ success: false, message: 'Accounts CSV nicht gefunden' });
+  }
+
+  // CSV einlesen
+  const lines = fs.readFileSync(filePath, 'utf-8')
+    .split('\n')
+    .filter(l => l.trim());
+  const header = lines[0];
+  const rows = lines.slice(1);
+
+  let updatedAccount = null;
+  const newRows = rows.map(line => {
+    const cols = line.split(',');
+    if (parseInt(cols[0], 10) === acctNum) {
+      let balance = parseFloat(cols[3]) || 0;
+      balance = type === 'deposit' ? balance + amount : balance - amount;
+      cols[3] = balance.toFixed(2);
+      updatedAccount = { ...cols }; // optional: als Objekt zurückliefern
+    }
+    return cols.join(',');
+  });
+
+  // CSV zurückschreiben
+  fs.writeFileSync(filePath, [header, ...newRows].join('\n') + '\n', 'utf-8');
+
+  if (updatedAccount) {
+    res.json({ success: true, account: { accountNumber: acctNum, accountBalance: parseFloat(updatedAccount[3]) } });
+  } else {
+    res.status(404).json({ success: false, message: 'Konto nicht gefunden' });
+  }
+});

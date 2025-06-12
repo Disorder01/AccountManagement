@@ -1,4 +1,3 @@
-// registration.component.ts
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../models/user';
 import { ApiService } from '../../services/apiService';
@@ -13,7 +12,6 @@ export class RegistrationComponent implements OnInit {
   user: User = { id: 0, firstName: '', lastName: '', password: '', accounts: [] };
   confirmPassword: string = '';
   validationErrors: Record<string, string> = {};
-  // neue Property: speichert, welche Felder bereits einmal fokussiert wurden
   touchedFields: Record<string, boolean> = {};
 
   constructor(
@@ -23,14 +21,11 @@ export class RegistrationComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  /** wird aufgerufen, sobald ein Input den Fokus erhält */
   onFieldFocus(field: string): void {
     this.touchedFields[field] = true;
   }
 
-  /**
-   * Prüft das Formular über den ValidationService und befüllt validationErrors.
-   */
+
   isFormValid(): boolean {
     this.validationErrors = this.validationService.validateUser(
       this.user,
@@ -39,9 +34,6 @@ export class RegistrationComponent implements OnInit {
     return Object.keys(this.validationErrors).length === 0;
   }
 
-  /**
-   * Sendet die Daten nur, wenn das Formular valide ist.
-   */
   createUser(): void {
     if (!this.isFormValid()) {
       return;

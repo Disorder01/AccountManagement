@@ -13,10 +13,28 @@
           <td class="actions">
             <button class="btn" (click)="deposit(account)">Einzahlen</button>
             <button class="btn" (click)="withdraw(account)">Auszahlen</button>
-            <button class="btn" (click)="edit(account)">Konto bearbeiten</button>
+            <button class="btn" (click)="edit(account)">
+              Konto bearbeiten
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
+  </div>
+  <div *ngIf="showTransactionForm" class="transaction-card">
+    <h3>
+      {{ transactionType === "deposit" ? "Einzahlen" : "Auszahlen" }} – Konto
+      {{ selectedAccount.accountNumber }}
+    </h3>
+    <input
+      type="number"
+      [(ngModel)]="transactionAmount"
+      placeholder="Betrag eingeben"
+      min="0"
+    />
+    <div class="actions">
+      <button class="btn" (click)="confirmTransaction()">Bestätigen</button>
+      <button class="btn" (click)="cancelTransaction()">Abbrechen</button>
+    </div>
   </div>
 </div>
