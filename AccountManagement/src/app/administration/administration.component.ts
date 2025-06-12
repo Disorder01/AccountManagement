@@ -3,6 +3,7 @@ import { Account } from '../../models/account';
 import { AuthService } from '../AuthService';
 import { ApiService } from '../../services/apiService';
 import { TransactionService, TransactionType } from '../../services/transactionService';
+import { AccountType } from '../../enums/accountType';
 
 @Component({
   selector: 'app-administration',
@@ -63,6 +64,15 @@ export class AdministrationComponent implements OnInit {
   }
 
   confirmTransaction() {
+    // Prüfen ob es ein Girokonto ist, welches überzogen wird
+    if (
+      this.selectedAccount.accountType === AccountType.Giro &&
+      !this.txService.checkAccountBalance(this.selectedAccount.accountBalance)
+    ) {
+      alert("Ein Girokonto darf nicht überzogen werden!");
+      return;
+    }
+
     this.txService
       .processTransaction(this.selectedAccount.accountNumber!, this.transactionAmount, this.transactionType)
       .subscribe({

@@ -1,3 +1,4 @@
+<h1>Meine Konten</h1>
 <div class="administration-container">
   <div class="table-wrapper">
     <table class="accounts-table">
@@ -9,13 +10,22 @@
       </thead>
       <tbody>
         <tr *ngFor="let account of accounts">
-          <td *ngFor="let col of columns">{{ account[col] }}</td>
+          <td *ngFor="let col of columns">
+            <ng-container [ngSwitch]="col">
+              <!-- Euro-Betrag mit zwei Nachkommastellen -->
+              <span *ngSwitchCase="'accountBalance'">
+                {{ account[col] | number : "1.2-2" }} €
+              </span>
+              <!-- Alle anderen Spalten unverändert -->
+              <span *ngSwitchDefault>
+                {{ account[col] }}
+              </span>
+            </ng-container>
+          </td>
           <td class="actions">
             <button class="btn" (click)="deposit(account)">Einzahlen</button>
             <button class="btn" (click)="withdraw(account)">Auszahlen</button>
-            <button class="btn" (click)="edit(account)">
-              Überweisen
-            </button>
+            <button class="btn" (click)="edit(account)">Überweisen</button>
           </td>
         </tr>
       </tbody>
@@ -23,7 +33,7 @@
   </div>
   <div *ngIf="showTransactionForm" class="transaction-card">
     <h3>
-      {{ transactionType === "deposit" ? "Einzahlen" : "Auszahlen" }} – Konto
+      {{ transactionType === "deposit" ? "Einzahlen" : "Auszahlen" }} - Konto
       {{ selectedAccount.accountNumber }}
     </h3>
     <input

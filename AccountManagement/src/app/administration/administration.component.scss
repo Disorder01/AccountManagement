@@ -1,3 +1,5 @@
+@import '../../assets/colors.scss';
+
 .administration-container {
   width: 100%;
   height: 100vh;
@@ -6,6 +8,10 @@
   padding: 1rem;
   box-sizing: border-box;
   overflow-y: auto;
+}
+
+h1 {
+  color: $font-color;
 }
 
 .table-wrapper {

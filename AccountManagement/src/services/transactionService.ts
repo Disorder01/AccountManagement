@@ -10,6 +10,11 @@ export class TransactionService {
 
   constructor(private http: HttpClient) {}
 
+  // Prüfen ob Kontostand größer als Null ist
+  checkAccountBalance(balance: number): boolean {
+    return balance > 0;
+  }
+
   processTransaction(
     accountNumber: number,
     amount: number,
