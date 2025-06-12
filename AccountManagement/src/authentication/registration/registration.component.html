@@ -1,24 +1,85 @@
-<div class="overAll">
-  <div class="registration">
-    <h2>Nachname: </h2>
-    <input type="text" [(ngModel)]="user.lastName">
-    <div class="error" *ngIf="validationErrors.lastName">{{ validationErrors.lastName }}</div>
+<!-- registration.component.html -->
+<div class="registration-container">
+  <div class="registration-card">
+    <h1>Profil erstellen</h1>
+    <form (ngSubmit)="createUser()" class="registration-form">
 
-    <h2>Vorname: </h2>
-    <input type="text" [(ngModel)]="user.firstName">
-    <div class="error" *ngIf="validationErrors.firstName">{{ validationErrors.firstName }}</div>
+      <div class="form-group">
+        <label for="lastName">Nachname</label>
+        <input
+          id="lastName"
+          type="text"
+          [(ngModel)]="user.lastName"
+          name="lastName"
+          required
+          class="form-control"
+          placeholder="Dein Nachname"
+          (focus)="onFieldFocus('lastName')"
+        />
+        <div *ngIf="touchedFields['lastName'] && validationErrors['lastName']" class="error">
+          {{ validationErrors['lastName'] }}
+        </div>
+      </div>
 
-    <h2>Passwort:</h2>
-    <input type="password" [(ngModel)]="user.password">
-    <div class="error" *ngIf="validationErrors.password">{{ validationErrors.password }}</div>
+      <div class="form-group">
+        <label for="firstName">Vorname</label>
+        <input
+          id="firstName"
+          type="text"
+          [(ngModel)]="user.firstName"
+          name="firstName"
+          required
+          class="form-control"
+          placeholder="Dein Vorname"
+          (focus)="onFieldFocus('firstName')"
+        />
+        <div *ngIf="touchedFields['firstName'] && validationErrors['firstName']" class="error">
+          {{ validationErrors['firstName'] }}
+        </div>
+      </div>
 
-    <h2>Passwort bestätigen:</h2>
-    <input type="password" [(ngModel)]="confirmPassword">
-    <div class="error" *ngIf="validationErrors.confirmPassword">{{ validationErrors.confirmPassword }}</div>
+      <div class="form-group">
+        <label for="password">Passwort</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="user.password"
+          name="password"
+          required
+          class="form-control"
+          placeholder="••••••••"
+          (focus)="onFieldFocus('password')"
+        />
+        <div *ngIf="touchedFields['password'] && validationErrors['password']" class="error">
+          {{ validationErrors['password'] }}
+        </div>
+      </div>
 
-    <button (click)="createUser()">Profil erstellen!</button>
+      <div class="form-group">
+        <label for="confirmPassword">Passwort bestätigen</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          [(ngModel)]="confirmPassword"
+          name="confirmPassword"
+          required
+          class="form-control"
+          placeholder="Passwort wiederholen"
+          (focus)="onFieldFocus('confirmPassword')"
+        />
+        <div *ngIf="touchedFields['confirmPassword'] && validationErrors['confirmPassword']" class="error">
+          {{ validationErrors['confirmPassword'] }}
+        </div>
+      </div>
 
-    <h3>Sie haben schon ein Profil?</h3>
-    <a href="/login">Jetzt anmelden</a>
+      <button type="submit" class="btn-primary" [disabled]="!isFormValid()">
+        Profil erstellen
+      </button>
+    </form>
+
+    <div class="login-cta">
+      <h3>Bereits registriert?</h3>
+      <a routerLink="/login" class="link-secondary">Jetzt anmelden</a>
+    </div>
   </div>
 </div>
