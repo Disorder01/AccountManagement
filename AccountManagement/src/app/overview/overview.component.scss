@@ -1,0 +1,48 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  min-height: 100vh;
+  padding: 2rem;
+  font-family: 'Segoe UI', sans-serif;
+  text-align: center;
+}
+
+:host h1 {
+  font-size: 4rem;
+  color: white;
+  margin: 0;
+}
+
+:host p {
+  font-size: 1.75rem;
+  color: #b3b3b3;
+  margin: 0;
+  max-width: 800px;
+}
+
+:host .actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+:host .routerButton {
+  font-size: 1.5rem;
+  padding: 1rem;
+  width: 100%;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  color: #000000;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+:host .routerButton:hover {
+  background-color: #5e5e5e;
+}
