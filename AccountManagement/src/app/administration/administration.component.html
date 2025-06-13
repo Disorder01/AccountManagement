@@ -12,11 +12,9 @@
         <tr *ngFor="let account of accounts">
           <td *ngFor="let col of columns">
             <ng-container [ngSwitch]="col">
-              <!-- Euro-Betrag mit zwei Nachkommastellen -->
               <span *ngSwitchCase="'accountBalance'">
-                {{ account[col] | number : "1.2-2" }} €
+                {{ account[col] | number:'1.2-2' }} €
               </span>
-              <!-- Alle anderen Spalten unverändert -->
               <span *ngSwitchDefault>
                 {{ account[col] }}
               </span>
@@ -25,16 +23,18 @@
           <td class="actions">
             <button class="btn" (click)="deposit(account)">Einzahlen</button>
             <button class="btn" (click)="withdraw(account)">Auszahlen</button>
-            <button class="btn" (click)="edit(account)">Überweisen</button>
+            <button class="btn" (click)="transfer(account)">Überweisen</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <!-- Ein- / Auszahlungs-Formular -->
   <div *ngIf="showTransactionForm" class="transaction-card">
     <h3>
-      {{ transactionType === "deposit" ? "Einzahlen" : "Auszahlen" }} - Konto
-      {{ selectedAccount.accountNumber }}
+      {{ transactionType === 'deposit' ? 'Einzahlen' : 'Auszahlen' }}
+      - Konto {{ selectedAccount.accountNumber }}
     </h3>
     <input
       type="number"
@@ -45,6 +45,27 @@
     <div class="actions">
       <button class="btn" (click)="confirmTransaction()">Bestätigen</button>
       <button class="btn" (click)="cancelTransaction()">Abbrechen</button>
+    </div>
+  </div>
+
+  <!-- Überweisungs-Formular -->
+  <div *ngIf="showTransferForm" class="transaction-card">
+    <h3>Zielkonto-Nummer -- Betrag</h3>
+    <input
+      type="number"
+      [(ngModel)]="transferTargetAccountNumber"
+      placeholder="Zielkonto-Nummer"
+      min="1"
+    />
+    <input
+      type="number"
+      [(ngModel)]="transferAmount"
+      placeholder="Betrag eingeben"
+      min="0"
+    />
+    <div class="actions">
+      <button class="btn" (click)="confirmTransfer()">Senden</button>
+      <button class="btn" (click)="cancelTransfer()">Abbrechen</button>
     </div>
   </div>
 </div>

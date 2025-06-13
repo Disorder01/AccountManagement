@@ -41,7 +41,6 @@ export class UserInfoComponent implements OnInit {
     this.apiService.updateUser(this.user).subscribe({
       next: res => {
         if (res.success) {
-          // neuen Stand ins original übernehmen
           this.originalUser = { ...this.user! };
           this.editMode = false;
         } else {
@@ -55,7 +54,7 @@ export class UserInfoComponent implements OnInit {
   }
 
   cancelEdit(): void {
-    this.toggleEdit();  // setzt automatisch zurück
+    this.toggleEdit(); 
   }
 
   private loadAccounts(): void {

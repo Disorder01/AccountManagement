@@ -110,6 +110,7 @@ app.listen(PORT, () => {
   console.log(`Server läuft auf http://localhost:${PORT}`);
 });
 
+  // Kunden-ID
 app.get('/api/accounts/:customerId', (req, res) => {
   const filePath = path.join(__dirname, 'database', 'accounts.csv');
   const customerId = parseInt(req.params.customerId, 10);
@@ -171,7 +172,7 @@ app.post('/api/accounts/:accountNumber/transaction', (req, res) => {
       let balance = parseFloat(cols[3]) || 0;
       balance = type === 'deposit' ? balance + amount : balance - amount;
       cols[3] = balance.toFixed(2);
-      updatedAccount = { ...cols }; // optional: als Objekt zurückliefern
+      updatedAccount = { ...cols }; 
     }
     return cols.join(',');
   });
@@ -186,7 +187,7 @@ app.post('/api/accounts/:accountNumber/transaction', (req, res) => {
   }
 });
 
-
+  // Kundeninformationen bearbeiten
 app.put('/api/users/:id', (req, res) => {
   const filePath = path.join(__dirname, 'database', 'users.csv');
   const userId = req.params.id;
@@ -205,7 +206,6 @@ app.put('/api/users/:id', (req, res) => {
   const newLines = lines.slice(1).map(line => {
     const [idStr, oldFirst, oldLast, password] = line.split(',');
     if (idStr === userId) {
-      // Zeile mit neuen Namen überschreiben, Passwort beibehalten
       updatedUser = new User({
         id: parseInt(idStr, 10),
         firstName: newFirstName,
@@ -221,8 +221,65 @@ app.put('/api/users/:id', (req, res) => {
     return res.status(404).json({ success: false, message: 'User nicht gefunden' });
   }
 
-  // CSV neu schreiben
   fs.writeFileSync(filePath, [header, ...newLines].join('\n') + '\n', 'utf-8');
 
   res.json({ success: true, user: updatedUser });
+});
+
+app.post('/api/accounts/:accountNumber/transfer', (req, res) => {
+  const filePath = path.join(__dirname, 'database', 'accounts.csv');
+  const fromNum = parseInt(req.params.accountNumber, 10);
+  const { targetAccountNumber, amount } = req.body;
+
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ success: false, message: 'Accounts CSV nicht gefunden' });
+  }
+
+  // CSV laden
+  const lines = fs.readFileSync(filePath, 'utf-8')
+    .split('\n').filter(l => l.trim());
+  const header = lines[0];
+  const rows = lines.slice(1).map(line => line.split(','));
+
+  let srcRow, tgtRow;
+  rows.forEach(cols => {
+    const num = +cols[0];
+    if (num === fromNum) srcRow = cols;
+    if (num === +targetAccountNumber) tgtRow = cols;
+  });
+
+  if (!srcRow) {
+    return res.status(404).json({ success: false, message: 'Quellkonto nicht gefunden' });
+  }
+  if (!tgtRow) {
+    return res.status(404).json({ success: false, message: 'Zielkonto nicht gefunden' });
+  }
+
+  const balanceSrc = parseFloat(srcRow[3]) || 0;
+  const overdraftLimit = parseFloat(srcRow[4]) || 0;
+  if (balanceSrc - amount < -overdraftLimit) {
+    return res.status(400).json({ success: false, message: 'Überziehungslimit erreicht' });
+  }
+
+  const newSrcBal = balanceSrc - amount;
+  const balanceTgt = parseFloat(tgtRow[3]) || 0;
+  const newTgtBal = balanceTgt + amount;
+
+  srcRow[3] = newSrcBal.toFixed(2);
+  tgtRow[3] = newTgtBal.toFixed(2);
+
+  const newLines = [header, ...rows.map(r => r.join(','))].join('\n') + '\n';
+  fs.writeFileSync(filePath, newLines, 'utf-8');
+
+  res.json({
+    success: true,
+    sourceAccount: {
+      accountNumber: fromNum,
+      accountBalance: newSrcBal
+    },
+    targetAccount: {
+      accountNumber: +targetAccountNumber,
+      accountBalance: newTgtBal
+    }
+  });
 });

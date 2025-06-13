@@ -1,3 +1,5 @@
+// src/app/components/administration/administration.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import { Account } from '../../models/account';
 import { AuthService } from '../AuthService';
@@ -15,11 +17,14 @@ export class AdministrationComponent implements OnInit {
   columns: Array<keyof Account> = [];
   userId = 0;
 
-  // Transaktion-Form
   showTransactionForm = false;
   transactionType: TransactionType = 'deposit';
   selectedAccount!: Account;
   transactionAmount = 0;
+
+  showTransferForm = false;
+  transferAmount = 0;
+  transferTargetAccountNumber!: number;
 
   constructor(
     private auth: AuthService,
@@ -37,8 +42,8 @@ export class AdministrationComponent implements OnInit {
       next: res => {
         if (res.success) {
           this.accounts = res.accounts;
-          if (res.accounts.length) {
-            this.columns = Object.keys(res.accounts[0]) as Array<keyof Account>;
+          if (this.accounts.length) {
+            this.columns = Object.keys(this.accounts[0]) as Array<keyof Account>;
           }
         }
       },
@@ -47,12 +52,12 @@ export class AdministrationComponent implements OnInit {
   }
 
   deposit(account: Account) {
-    console.log('Klick auf Einzahlen!', account);
+    this.cancelTransfer();
     this.openTransactionForm(account, 'deposit');
   }
 
   withdraw(account: Account) {
-    console.log('Klick auf Einzahlen!', account);
+    this.cancelTransfer();
     this.openTransactionForm(account, 'withdraw');
   }
 
@@ -64,23 +69,37 @@ export class AdministrationComponent implements OnInit {
   }
 
   confirmTransaction() {
-    // Prüfen ob es ein Girokonto ist, welches überzogen wird
+    const { accountBalance = 0, overdraftLimit = 0, accountType } = this.selectedAccount;
+
+    // Nur bei Girokonten Überziehungscheck
     if (
-      this.selectedAccount.accountType === AccountType.Giro &&
-      !this.txService.checkAccountBalance(this.selectedAccount.accountBalance)
+      accountType === AccountType.Giro &&
+      !this.txService.checkAccountBalance(
+        accountBalance,
+        this.transactionAmount,
+        this.transactionType,
+        overdraftLimit
+      )
     ) {
-      alert("Ein Girokonto darf nicht überzogen werden!");
+      alert('Das Limit zum Überziehen des Kontos ist erreicht!');
       return;
     }
 
     this.txService
-      .processTransaction(this.selectedAccount.accountNumber!, this.transactionAmount, this.transactionType)
+      .processTransaction(
+        this.selectedAccount.accountNumber!,
+        this.transactionAmount,
+        this.transactionType
+      )
       .subscribe({
         next: res => {
           if (res.success && res.account) {
-            // Lokales Update
-            const idx = this.accounts.findIndex(a => a.accountNumber === this.selectedAccount.accountNumber);
-            this.accounts[idx].accountBalance = res.account.accountBalance;
+            const idx = this.accounts.findIndex(
+              a => a.accountNumber === res.account.accountNumber
+            );
+            if (idx > -1) {
+              this.accounts[idx].accountBalance = res.account.accountBalance;
+            }
           }
           this.cancelTransaction();
         },
@@ -92,7 +111,66 @@ export class AdministrationComponent implements OnInit {
     this.showTransactionForm = false;
   }
 
-  edit(account: Account) {
-    console.log('Konto bearbeiten', account);
+  transfer(account: Account) {
+    this.cancelTransaction();
+    this.selectedAccount = account;
+    this.transferAmount = 0;
+    this.transferTargetAccountNumber = 0;
+    this.showTransferForm = true;
+  }
+
+  confirmTransfer() {
+    const { accountBalance = 0, overdraftLimit = 0 } = this.selectedAccount;
+
+    // Überziehungs-Check für Quellkonto
+    if (
+      !this.txService.checkAccountBalance(
+        accountBalance,
+        this.transferAmount,
+        'withdraw',
+        overdraftLimit
+      )
+    ) {
+      alert('Überziehungslimit des Quellkontos erreicht!');
+      return;
+    }
+
+    this.txService
+      .transfer(
+        this.selectedAccount.accountNumber!,
+        this.transferTargetAccountNumber,
+        this.transferAmount
+      )
+      .subscribe({
+        next: res => {
+          if (res.success) {
+            // Quellkonto aktualisieren
+            const srcIdx = this.accounts.findIndex(
+              a => a.accountNumber === res.sourceAccount.accountNumber
+            );
+            if (srcIdx > -1) {
+              this.accounts[srcIdx].accountBalance = res.sourceAccount.accountBalance;
+            }
+            // Zielkonto aktualisieren oder anhängen
+            const tgtIdx = this.accounts.findIndex(
+              a => a.accountNumber === res.targetAccount.accountNumber
+            );
+            if (tgtIdx > -1) {
+              this.accounts[tgtIdx].accountBalance = res.targetAccount.accountBalance;
+            } else {
+              this.accounts.push(res.targetAccount);
+            }
+          }
+          this.cancelTransfer();
+        },
+        error: err => {
+          console.error('Überweisung fehlgeschlagen', err);
+          alert('Fehler bei der Überweisung!');
+        }
+      });
+  }
+
+  cancelTransfer() {
+    this.showTransferForm = false;
   }
 }
